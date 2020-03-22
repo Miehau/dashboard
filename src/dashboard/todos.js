@@ -29,8 +29,19 @@ class TableRow extends React.Component {
     markDone() {
         var t = this.state.task;
         t.done = true;
-        this.setState({ task: t });
-        this.state.handleEdit(this.state.task);
+        var requestArgs = {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(t)
+        };
+        fetch('http://localhost:8080/tasks/' + t.id, requestArgs)
+            .then(res => res.json())
+            .then(data => { console.log(data.data[0].attributes.task);
+                this.setState({ task: data.data[0].attributes.task }) })
+            .catch(e => console.log(e));
+        // t.done = true;
+        // this.setState({ task: t });
+        // this.state.handleEdit(this.state.task);
     }
 
     render() {
@@ -127,8 +138,6 @@ class ToDos extends React.Component {
     render() {
         return (
             <div className="ui raised padded container segment">
-
-
                 <div>
                     <table className="ui selectable celled table">
                         <thead>
